@@ -3,8 +3,8 @@
 
 
 typedef struct arvbm{
-  int nchaves, folha, *chave;
-  struct arvbm **filho, *prox;
+  int nchaves, folha, *filho, prox;
+  char **nome;
 }TARVBM;
 
 
