@@ -6,8 +6,8 @@ int main(void){
 	
 	FILE *arq_nodes = fopen("data/Nodes.txt","r");
 	if(!arq_nodes) exit(1);
-	FILE *arq_relationships = fopen("data/Relationships.txt","r");
-	if(!arq_relationships) exit(1);
+	//FILE *arq_relationships = fopen("data/Relationships.txt","r");
+	//if(!arq_relationships) exit(1);
 	FILE *arq_indices = fopen("bin/indices","r+b");
 	if(!arq_indices){
 		TARVBM_cria("bin/indices", t);
@@ -25,19 +25,36 @@ int main(void){
 	
 	while(fgets(linha, N, arq_nodes)){
 		char *ponteiro_linha = linha;
+		
+		dados dado = {0};
 	
 		tipo = divide_string(&ponteiro_linha);
+		if(!tipo || strlen(tipo) == 0){
+			continue;
+		}
+		strcpy(dado.tipo, tipo);
+		
 		if(strcmp(tipo,"Person") == 0){
 			nome = divide_string(&ponteiro_linha);
 			ano = divide_string(&ponteiro_linha);
 			
-			offset = TARVBM_insere(arq_indices, offset, nome, t);
+			strcpy(dado.nome, nome);
+			dado.ano = atoi(ano);
+			
+			offset = TARVBM_insere(arq_indices, offset, nome, dado, t);
 		}else{
 			nome = divide_string(&ponteiro_linha);
 			ano = divide_string(&ponteiro_linha);
 			frase_filme = divide_string(&ponteiro_linha);
 			
-			offset = TARVBM_insere(arq_indices, offset, nome, t);
+			if(!nome || !ano || !frase_filme) continue;
+			
+			strcpy(dado.nome, nome);
+			dado.ano = atoi(ano);
+			if(!ano || !isdigit(ano[0]))continue;
+			strcpy(dado.frase, frase_filme);
+			
+			offset = TARVBM_insere(arq_indices, offset, nome, dado, t);
 		}
 	}
 	
@@ -48,7 +65,7 @@ int main(void){
 	
 	free(linha);
 	fclose(arq_nodes);
-	fclose(arq_relationships);
+	//fclose(arq_relationships);
 	fclose(arq_indices);
 	
 	return 0;
