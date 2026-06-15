@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct dados_das_folhas{
+	char nome[150];
+	char tipo[10];
+	int ano;
+	char frase[240];
+}dados;
+
+typedef struct arvbm{
+  int nchaves, folha, *filho, prox;
+  char **chave;
+}TARVBM;
+
+void TARVBM_cria(char *arq, int t);
+TARVBM *TARVBM_busca(char *arq, char *nome, int t);
+int TARVBM_insere(FILE *fp, int offset, char *nome, int t);
+
+// Coloque junto com os outros protótipos
+void TARVBM_imprime(char *arq, int t);
