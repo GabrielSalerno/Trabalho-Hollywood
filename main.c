@@ -16,9 +16,8 @@ int main(void){
 	}
 	
 	int t_lido, offset;
-	fseek(arq_indices, 0, SEEK_SET);
     fread(&t_lido, sizeof(int), 1, arq_indices);//pula o t que ta no inicio do arquivo
-    fread(&offset, sizeof(int), 1, arq_indices);
+    fread(&offset, sizeof(int), 1, arq_indices);//posição da raiz
     
 	char *tipo, *nome, *ano, *frase_filme;
 	char *linha = (char*)malloc(sizeof(char)*N);
