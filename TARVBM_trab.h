@@ -17,6 +17,5 @@ typedef struct arvbm{
 void TARVBM_cria(char *arq, int t);
 TARVBM *TARVBM_busca(char *arq, char *nome, int t);
 int TARVBM_insere(FILE *fp, int offset, char *nome, int t);
-
-// Coloque junto com os outros protótipos
-void TARVBM_imprime(char *arq, int t);
+char *divide_string(char **linha);
+void TARVBM_imprime(FILE *fp, int offset, int t);

@@ -22,7 +22,7 @@ void TARVBM_cria(char *arq, int t){
 	fwrite(&prox, sizeof(int), 1, fp);
 	
 	for(int i=0; i < ((2 * t) - 1); i++){
-		fwrite(&chave, sizeof(char), 150, fp);
+		fwrite(chave, sizeof(char), 150, fp);
 	}
 	for(int i=0; i < (2 * t); i++){
 		fwrite(&filho, sizeof(int), 1, fp);
@@ -115,7 +115,7 @@ void aloca(FILE *fp, int offset, int t){
 	fwrite(&prox, sizeof(int), 1, fp);
 	
 	for(int i=0; i < ((2 * t) - 1); i++){
-		fwrite(&chave, sizeof(char), 150, fp);
+		fwrite(chave, sizeof(char), 150, fp);
 	}
 	for(int i=0; i < (2 * t); i++){
 		fwrite(&filho, sizeof(int), 1, fp);
@@ -195,7 +195,7 @@ void divisao(FILE *fp, int offset, int indice_filho, TARVBM *no_pai, int t){
 	fwrite(&no_pai->folha, sizeof(int), 1, fp);
 	fwrite(&no_pai->prox, sizeof(int), 1, fp);
 	for(int j=0;j<((2 * t) - 1);j++){
-		fwrite(&no_pai->chave[j], sizeof(char)*150, 1, fp);
+		fwrite(no_pai->chave[j], sizeof(char)*150, 1, fp);
 	}
 	for(int j=0;j<(2 * t);j++){
 		fwrite(&no_pai->filho[j], sizeof(int), 1, fp);
@@ -206,7 +206,7 @@ void divisao(FILE *fp, int offset, int indice_filho, TARVBM *no_pai, int t){
 	fwrite(&f->folha, sizeof(int), 1, fp);
 	fwrite(&f->prox, sizeof(int), 1, fp);
 	for(int j=0;j<((2 * t) - 1);j++){
-		fwrite(&f->chave[j], sizeof(char)*150, 1, fp);
+		fwrite(f->chave[j], sizeof(char)*150, 1, fp);
 	}
 	for(int j=0;j<(2 * t);j++){
 		fwrite(&f->filho[j], sizeof(int), 1, fp);
@@ -217,7 +217,7 @@ void divisao(FILE *fp, int offset, int indice_filho, TARVBM *no_pai, int t){
 	fwrite(&novo_no->folha, sizeof(int), 1, fp);
 	fwrite(&novo_no->prox, sizeof(int), 1, fp);
 	for(int j=0;j<((2 * t) - 1);j++){
-		fwrite(&novo_no->chave[j], sizeof(char)*150, 1, fp);
+		fwrite(novo_no->chave[j], sizeof(char)*150, 1, fp);
 	}
 	for(int j=0;j<(2 * t);j++){
 		fwrite(&novo_no->filho[j], sizeof(int), 1, fp);
@@ -260,7 +260,7 @@ void insere_nao_completo(FILE *fp, int offset, char *nome, int t){
 		fwrite(&no->prox, sizeof(int), 1, fp);
 		
 		for(int j=0;j<((2 * t) - 1);j++){
-			fwrite(&no->chave[j], sizeof(char)*150, 1, fp);
+			fwrite(no->chave[j], sizeof(char)*150, 1, fp);
 		}
 		
 		for(int j=0;j<(2 * t);j++){
@@ -350,62 +350,59 @@ int TARVBM_insere(FILE *fp, int offset, char *nome, int t){
 	}
 }
 
-// Função recursiva interna (faz o trabalho pesado)
-void imprime_interna(FILE *fp, int offset, int andar, int t) {
-    if (offset == -1) return;
-
-    TARVBM *no = le_no(fp, offset, t);
-    if (!no) return;
-
-    // Imprime os espaços para dar o efeito de "escadinha" (hierarquia)
-    for (int i = 0; i < andar; i++) {
-        printf("    ");
-    }
-
-    // Imprime as informações do nó atual
-    printf("[Offset: %d] ", offset);
-    if (no->folha) printf("FOLHA - Chaves: (");
-    else printf("INTERNO - Chaves: (");
-
-    for (int i = 0; i < no->nchaves; i++) {
-        printf("%s", no->chave[i]);
-        if (i < no->nchaves - 1) printf(", ");
-    }
-    printf(")\n");
-
-    // Se não for folha, desce recursivamente para imprimir os filhos
-    if (!no->folha) {
-        for (int i = 0; i <= no->nchaves; i++) {
-            imprime_interna(fp, no->filho[i], andar + 1, t);
-        }
-    }
-
-    // Libera a memória da RAM (igual fizemos nas outras funções)
-    for (int j = 0; j < ((2 * t) - 1); j++) {
-        free(no->chave[j]);
-    }
-    free(no->chave);
-    free(no->filho);
-    free(no);
+char *divide_string(char **linha){
+	if((*linha)==NULL || (**linha)=='\0'){
+		return NULL;
+	}
+	
+	char *inicio_linha = (*linha);
+	
+	char *pos_separador = strstr(inicio_linha," | ");
+	
+	if(pos_separador){
+		(*pos_separador) = '\0';
+		(*linha) = pos_separador + 3;
+	}else{
+		pos_separador = strchr(inicio_linha,'\n');
+		
+		if(pos_separador){
+			(*pos_separador) = '\0';
+		}
+		
+		*linha = NULL;
+	}
+	
+	return inicio_linha;
 }
 
-// Função PÚBLICA (A que você vai chamar no seu main)
-void TARVBM_imprime(char *arq, int t) {
-    FILE *fp = fopen(arq, "rb");
-    if (!fp) {
-        printf("Erro ao abrir o arquivo para impressao.\n");
-        return;
-    }
+void imp(FILE *fp, int offset, int andar, int t) {
+	if(offset==-1)return;
 
-    int t_lido, offset;
+	TARVBM *no = le_no(fp, offset, t);
+	if(!no)return;
+	
+	if(!no->folha){
+		imp(fp, no->filho[no->nchaves], andar+1, t);
+	}
+	
+	for(int i=no->nchaves-1;i>=0;i--){
+		for(int j = 0;j<andar;j++){
+			printf("\t");
+		}
+		printf("%s\n",no->chave[i]);
+		if(!no->folha){
+			imp(fp, no->filho[i], andar+1, t);
+		}
+	}
+	
+	for (int j = 0; j < ((2 * t) - 1); j++){
+		free(no->chave[j]);
+	}
+   	free(no->chave);
+	free(no->filho);
+	free(no);
+}
 
-    // Lê o cabeçalho para descobrir onde a raiz está agora
-    fread(&t_lido, sizeof(int), 1, fp);
-    fread(&offset, sizeof(int), 1, fp);
-
-    printf("\n=== ESTRUTURA DA ARVORE B+ ===\n");
-    imprime_interna(fp, offset, 0, t);
-    printf("==============================\n\n");
-
-    fclose(fp);
+void TARVBM_imprime(FILE *fp, int offset, int t){
+	imp(fp, offset, 0, t);
 }
