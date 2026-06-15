@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "TARVBM_trab.h"
-#define N 500
+#define N 210
 
 char *divide_string(char **linha){
 	if((*linha)==NULL || (**linha)=='\0'){
