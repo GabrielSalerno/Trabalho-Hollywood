@@ -22,7 +22,7 @@ void TARVBM_cria(char *arq, int t){
 	fwrite(&prox, sizeof(int), 1, fp);
 	
 	for(int i=0; i < ((2 * t) - 1); i++){
-		fwrite(chave, sizeof(char), 150, fp);
+		fwrite(&chave, sizeof(char), 150, fp);
 	}
 	for(int i=0; i < (2 * t); i++){
 		fwrite(&filho, sizeof(int), 1, fp);
@@ -62,8 +62,8 @@ TARVBM *TARVBM_busca(char *arq, char *nome, int t){
 
     int offset = sizeof(int);
 
-    while (offset_atual != -1){
-        TARVBM *no = le_no(fp, offset_atual, t);
+    while (offset != -1){
+        TARVBM *no = le_no(fp, offset, t);
 
         int i = 0;
         while ((i < no->nchaves) && (strcmp(nome, no->chave[i]) > 0)){
@@ -115,7 +115,7 @@ void aloca(FILE *fp, int offset, int t){
 	fwrite(&prox, sizeof(int), 1, fp);
 	
 	for(int i=0; i < ((2 * t) - 1); i++){
-		fwrite(chave, sizeof(char), 150, fp);
+		fwrite(&chave, sizeof(char), 150, fp);
 	}
 	for(int i=0; i < (2 * t); i++){
 		fwrite(&filho, sizeof(int), 1, fp);
@@ -195,10 +195,10 @@ void divisao(FILE *fp, int offset, int indice_filho, TARVBM *no_pai, int t){
 	fwrite(&no_pai->folha, sizeof(int), 1, fp);
 	fwrite(&no_pai->prox, sizeof(int), 1, fp);
 	for(int j=0;j<((2 * t) - 1);j++){
-		fwrite(no_pai->chave[j], sizeof(char)*150, 1, fp);
+		fwrite(&no_pai->chave[j], sizeof(char)*150, 1, fp);
 	}
 	for(int j=0;j<(2 * t);j++){
-		fwrite(no_pai->filho[j], sizeof(int), 1, fp);
+		fwrite(&no_pai->filho[j], sizeof(int), 1, fp);
 	}
 	
 	fseek(fp, offset_f, SEEK_SET);
@@ -206,10 +206,10 @@ void divisao(FILE *fp, int offset, int indice_filho, TARVBM *no_pai, int t){
 	fwrite(&f->folha, sizeof(int), 1, fp);
 	fwrite(&f->prox, sizeof(int), 1, fp);
 	for(int j=0;j<((2 * t) - 1);j++){
-		fwrite(f->chave[j], sizeof(char)*150, 1, fp);
+		fwrite(&f->chave[j], sizeof(char)*150, 1, fp);
 	}
 	for(int j=0;j<(2 * t);j++){
-		fwrite(f->filho[j], sizeof(int), 1, fp);
+		fwrite(&f->filho[j], sizeof(int), 1, fp);
 	}
 	
 	fseek(fp, final_arq,SEEK_SET);
@@ -217,10 +217,10 @@ void divisao(FILE *fp, int offset, int indice_filho, TARVBM *no_pai, int t){
 	fwrite(&novo_no->folha, sizeof(int), 1, fp);
 	fwrite(&novo_no->prox, sizeof(int), 1, fp);
 	for(int j=0;j<((2 * t) - 1);j++){
-		fwrite(novo_no->chave[j], sizeof(char)*150, 1, fp);
+		fwrite(&novo_no->chave[j], sizeof(char)*150, 1, fp);
 	}
 	for(int j=0;j<(2 * t);j++){
-		fwrite(novo_no->filho[j], sizeof(int), 1, fp);
+		fwrite(&novo_no->filho[j], sizeof(int), 1, fp);
 	}	 
 	
 	for (int j = 0; j < ((2 * t) - 1); j++){
@@ -260,11 +260,11 @@ void insere_nao_completo(FILE *fp, int offset, char *nome, int t){
 		fwrite(&no->prox, sizeof(int), 1, fp);
 		
 		for(int j=0;j<((2 * t) - 1);j++){
-			fwrite(no->chave[j], sizeof(char)*150, 1, fp);
+			fwrite(&no->chave[j], sizeof(char)*150, 1, fp);
 		}
 		
 		for(int j=0;j<(2 * t);j++){
-			fwrite(no->filho[j], sizeof(int), 1, fp);
+			fwrite(&no->filho[j], sizeof(int), 1, fp);
 		}
 		
 		for (int j = 0; j < ((2 * t) - 1); j++){
