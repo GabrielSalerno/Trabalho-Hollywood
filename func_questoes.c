@@ -227,7 +227,7 @@ void coleta_equipe(FILE *arq_indices, int offset, FILE *arq_grafo, int t, char *
                 fread(&d, sizeof(dados), 1, arq_dados);
 
                 if (strcmp(d.tipo, "Person") == 0 && d.offset_prim_viz != -1) {
-                    int offset_atual = d.offset_prim_viz;
+                    long offset_atual = d.offset_prim_viz;
                     Relacionamentos rel;
                     int trabalhou = 0;
 

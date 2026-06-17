@@ -19,7 +19,6 @@ typedef struct arvbm{
 
 void libera_no(TARVBM *no, int t);
 void TARVBM_cria(char *arq, int t);
-TARVBM *TARVBM_busca1(char *arq, char *nome, int t);
 TARVBM *TARVBM_busca(FILE *fp, int offset, char *nome, int t);
 int TARVBM_insere(FILE *fp, int offset, char *nome, dados dado,int t);
 char *divide_string(char **linha);

@@ -77,57 +77,6 @@ TARVBM *le_no(FILE *fp, int offset, int t){
     return no;
 }
 
-TARVBM *TARVBM_busca1(char *arq, char *nome, int t){
-    FILE *fp = fopen(arq, "rb");
-    if (!fp) return NULL;
-
-    int t_lido, offset, id;
-    fread(&t_lido, sizeof(int), 1, fp);
-    fread(&offset, sizeof(int), 1, fp);
-    fread(&id, sizeof(int), 1, fp);
-
-    while (offset != -1){
-        TARVBM *no = le_no(fp, offset, t);
-
-        int i = 0;
-        while ((i < no->nchaves) && (strcmp(nome, no->chave[i]) > 0)){
-            i++;
-        }
-
-        if ((i < no->nchaves) && no->folha && (strcmp(nome, no->chave[i]) == 0)){
-            fclose(fp);
-            return no;
-        }
-
-        if (no->folha){
-            for (int j = 0; j < ((2 * t) - 1); j++){
-                free(no->chave[j]);
-            }
-            free(no->chave);
-            free(no->filho);
-            free(no);
-            fclose(fp);
-            return NULL;
-        }
-
-        if ((i < no->nchaves) && (strcmp(nome, no->chave[i]) == 0)){
-            i++;
-        }
-
-        offset = no->filho[i];
-        
-        for (int j = 0; j < ((2 * t) - 1); j++){
-			free(no->chave[j]);
-       	}
-       	free(no->chave);
-		free(no->filho);
-		free(no); 
-    }
-
-    fclose(fp);
-    return NULL;
-}
-
 TARVBM *TARVBM_busca(FILE *fp, int offset, char *nome, int t){
     if (!fp) return NULL;
 
@@ -544,7 +493,6 @@ char *divide_string(char **linha){
 		pos_separador = strchr(inicio_linha, '\n');
 		if(pos_separador) *pos_separador = '\0';
 		
-		// Limpa o \r (O CULPADO!)
 		pos_separador = strchr(inicio_linha, '\r');
 		if(pos_separador) *pos_separador = '\0';
 		
