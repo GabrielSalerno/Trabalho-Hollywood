@@ -230,23 +230,23 @@ int main(void){
 			printf(" (1) - (a) Todos que trabalharam juntos\n");
 			printf(" (2) - (b) Atores e diretores que trabalharam juntos\n");
 			printf(" (3) - (c) Atores que atuaram juntos\n");
-			printf(" (6) - (f) Atores que MAIS atuaram\n");
+			printf(" (4) - (d) Atores que mais atuaram juntos por decada\n");
+			printf(" (5) - (e) Atores e diretores juntos por decada\n");
+			printf(" (6) - (f) Atores que mais atuaram\n");
 			printf(" (7) - (g) Atores que MENOS atuaram\n");
 			printf(" (8) - (h) Diretores que MAIS dirigiram\n");
 			printf(" (9) - (i) Diretores que MENOS dirigiram\n");
 			printf("(10) - (j) Produtores mais atuantes\n");
 			printf("(11) - (k) Produtores menos atuantes\n");
+			printf("(12) - (l) Questoes de (f) a (k) filtradas por decada\n");
+			printf("(13) - (m) Filmes que sao continuacoes\n");
+			printf("(14) - (n) Atores que nasceram no mesmo ano\n");
 			printf("(15) - (o) Atores que ja dirigiram\n");
 			printf("(16) - (p) Atores que ja produziram\n");
+			printf("(17) - (q) Retirar todos de um filme\n");
 			printf("(18) - (r) Mesma pessoa escreveu, dirigiu e produziu o filme\n");
 			printf("(19) - (s) Mesma pessoa dirigiu e produziu o filme\n");
-			printf(" (4) - (d) Atores que mais atuaram juntos por decada\n");
-			printf(" (5) - (e) Atores e diretores juntos por decada\n");
-			printf("(12) - (l) Questoes de (f) a (k) filtradas por decada\n");
-			printf("(14) - (n) Atores que nasceram no mesmo ano\n");
 			printf("(20) - (t) Atores que nasceram no ano de lancamento do filme\n");
-			printf("(13) - (m) Filmes que sao continuacoes\n");
-			printf("(17) - (q) Retirar todos de um filme\n");
 			printf("Escolha o numero da opcao (1 a 20): ");
 			scanf("%d",&op_letra);
 			
@@ -276,7 +276,32 @@ int main(void){
 				case 11: // (k)
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "PRODUCED", 0);
 					break;
-				
+					
+					
+				case 15: // (o) 
+					atores_mais(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", "DIRECTED");
+					break;
+				case 16: // (p)
+					atores_mais(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", "PRODUCED");
+					break;
+				case 17: // (q)
+					getchar();
+					
+					char filme_alvo[150];
+					printf("Digite o nome do filme para deletar a equipe: ");
+					fgets(filme_alvo, 150, stdin);
+					filme_alvo[strcspn(filme_alvo, "\n")] = '\0';
+					
+					offset = retira_equipe_filme(arq_indices, offset, arq_grafo_leitura, t, filme_alvo);
+					break;
+				case 18: // (r)
+					filme_faz_tudo(arq_indices, offset, arq_grafo_leitura, t, 1);
+					break;
+				case 19: // (s)
+					filme_faz_tudo(arq_indices, offset, arq_grafo_leitura, t, 0);
+					break;
+					
+					
 				default:
 					printf("Opcao invalida. Digite um numero de 1 a 20.\n");
 					break;
@@ -290,7 +315,7 @@ int main(void){
 		printf("(2) - Retirar atores, diretores ou filmes\n");
 		printf("(3) - Buscar nome\n");
 		printf("(4) - Imprimir árvore\n");
-		printf("(5) - QUestões\n");
+		printf("(5) - Questões\n");
 		printf("(6) - Sair e Salvar\n");
 		printf("Escolha: ");
 		
