@@ -25,3 +25,4 @@ int TARVBM_insere(FILE *fp, int offset, char *nome, dados dado,int t);
 char *divide_string(char **linha);
 void TARVBM_imprime(FILE *fp, int offset, int t);
 int TARVBM_retira(FILE *fp, int offset_raiz, char *nome, int t);
+TARVBM *le_no(FILE *fp, int offset, int t);

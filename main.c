@@ -1,31 +1,7 @@
 #include "TARVBM_trab.h"
 #include "TG.h"
+#include "func_questoes.h"
 #define N 1000
-
-void imprime_folha(int id_folha, int t){
-    char nome_arq[50];
-    sprintf(nome_arq, "bin/folha_%d.bin", id_folha);
-    
-    FILE *fp = fopen(nome_arq, "rb");
-    if(!fp){
-        printf("Arquivo folha_%d.bin nao encontrado\n", id_folha);
-        return;
-    }
-    
-    printf("=== folha_%d.bin ===\n", id_folha);
-    dados d;
-    for(int i = 0; i < (2*t)-1; i++){
-        fread(&d, sizeof(dados), 1, fp);
-        if(d.nome[0] == '\0'){
-            printf("[%d] (vazio)\n", i);
-        } else {
-            printf("[%d] tipo=%s | nome=%s | ano=%d | prim_viz=%ld |frase=%s\n",
-                i, d.tipo, d.nome, d.ano, d.offset_prim_viz, d.frase);
-        }
-    }
-    
-    fclose(fp);
-}
 
 int main(void){
 	int t, offset;
@@ -135,28 +111,18 @@ int main(void){
     	printf("Arvore já existe com t=%d\n", t);
 	}
     
-	/*
-    // imprime as primeiras N folhas para testar
-	for(int i = 1; i <= 10; i++){
-		imprime_folha(i, t);
-	}
-
-	brincar_com_grafo(arq_indices, offset, "Charlize Theron", t);
-    brincar_com_grafo(arq_indices, offset, "The Matrix", t);
-    brincar_com_grafo(arq_indices, offset, "Tom Hanks", t);
-    */
-    
 	int opcao, sub_opcao;
 	printf("(1) - Inserir atores, diretores, produtores ou filmes\n");
 	printf("(2) - Retirar atores, diretores, produtores ou filmes\n");
 	printf("(3) - Buscar nome\n");
 	printf("(4) - Imprimir árvore\n");
-	printf("(5) - Sair e Salvar\n");
+	printf("(5) - Questões\n");
+	printf("(6) - Sair e Salvar\n");
 	printf("Escolha: ");
 	
 	scanf("%d", &opcao);
 
-	while(opcao !=5) {
+	while(opcao != 6) {
 		if (opcao == 1 || opcao == 2) {
 			printf("(1) - Ator, Diretor, Produtor\n");
 			printf("(2) - Filme\n");
@@ -259,6 +225,63 @@ int main(void){
 			}
 		} else if (opcao == 4) {
 			TARVBM_imprime(arq_indices, offset,t);
+		} else if (opcao == 5) {
+			int op_letra;
+			printf(" (1) - (a) Todos que trabalharam juntos\n");
+			printf(" (2) - (b) Atores e diretores que trabalharam juntos\n");
+			printf(" (3) - (c) Atores que atuaram juntos\n");
+			printf(" (6) - (f) Atores que MAIS atuaram\n");
+			printf(" (7) - (g) Atores que MENOS atuaram\n");
+			printf(" (8) - (h) Diretores que MAIS dirigiram\n");
+			printf(" (9) - (i) Diretores que MENOS dirigiram\n");
+			printf("(10) - (j) Produtores mais atuantes\n");
+			printf("(11) - (k) Produtores menos atuantes\n");
+			printf("(15) - (o) Atores que ja dirigiram\n");
+			printf("(16) - (p) Atores que ja produziram\n");
+			printf("(18) - (r) Mesma pessoa escreveu, dirigiu e produziu o filme\n");
+			printf("(19) - (s) Mesma pessoa dirigiu e produziu o filme\n");
+			printf(" (4) - (d) Atores que mais atuaram juntos por decada\n");
+			printf(" (5) - (e) Atores e diretores juntos por decada\n");
+			printf("(12) - (l) Questoes de (f) a (k) filtradas por decada\n");
+			printf("(14) - (n) Atores que nasceram no mesmo ano\n");
+			printf("(20) - (t) Atores que nasceram no ano de lancamento do filme\n");
+			printf("(13) - (m) Filmes que sao continuacoes\n");
+			printf("(17) - (q) Retirar todos de um filme\n");
+			printf("Escolha o numero da opcao (1 a 20): ");
+			scanf("%d",&op_letra);
+			
+			FILE *arq_grafo_leitura = fopen("bin/relacionamentos.bin", "rb");
+			if (!arq_grafo_leitura) {
+				printf("Erro ao abrir arquivo de relacionamentos!\n");
+				continue;
+			}
+
+			switch (op_letra) {
+
+				case 6: // (f)
+					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", 1);
+					break;
+				case 7: // (g)
+					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", 0);
+					break;
+				case 8: // (h)
+					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "DIRECTED", 1);
+					break;
+				case 9: // (i)
+					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "DIRECTED", 0);
+					break;
+				case 10: // (j)
+					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "PRODUCED", 1);
+					break;
+				case 11: // (k)
+					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "PRODUCED", 0);
+					break;
+				
+				default:
+					printf("Opcao invalida. Digite um numero de 1 a 20.\n");
+					break;
+			}
+			fclose(arq_grafo_leitura);
 		} else {
 			printf("Opcao invalida\n");
 		}
@@ -267,7 +290,8 @@ int main(void){
 		printf("(2) - Retirar atores, diretores ou filmes\n");
 		printf("(3) - Buscar nome\n");
 		printf("(4) - Imprimir árvore\n");
-		printf("(5) - Sair e Salvar\n");
+		printf("(5) - QUestões\n");
+		printf("(6) - Sair e Salvar\n");
 		printf("Escolha: ");
 		
 		scanf("%d", &opcao);
