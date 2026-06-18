@@ -227,6 +227,7 @@ int main(void){
 			TARVBM_imprime(arq_indices, offset,t);
 		} else if (opcao == 5) {
 			int op_letra;
+			printf("\n");
 			printf(" (1) - (a) Todos que trabalharam juntos\n");
 			printf(" (2) - (b) Atores e diretores que trabalharam juntos\n");
 			printf(" (3) - (c) Atores que atuaram juntos\n");
@@ -258,7 +259,26 @@ int main(void){
 			}
 
 			switch (op_letra) {
-
+				case 1: // (a)
+					relatorio_duplas(arq_indices, offset, arq_grafo_leitura, t, 1);
+					printf("\n");
+					break;
+				case 2: // (b)
+					relatorio_duplas(arq_indices, offset, arq_grafo_leitura, t, 2);
+					printf("\n");
+					break;
+				case 3: // (c)
+					relatorio_duplas(arq_indices, offset, arq_grafo_leitura, t, 3);
+					printf("\n");
+					break;
+				case 4: // (d)
+					relatorio_decadas(arq_indices, offset, arq_grafo_leitura, t, 1);
+					printf("\n");
+					break;
+				case 5: // (e)
+					relatorio_decadas(arq_indices, offset, arq_grafo_leitura, t, 2);
+					printf("\n");
+					break;
 				case 6: // (f)
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", 1);
 					printf("\n");
@@ -283,7 +303,25 @@ int main(void){
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "PRODUCED", 0);
 					printf("\n");
 					break;
-					
+				case 12: // (l)
+					printf("Escolha qual filtrar por decada\n");
+					printf(" (6) Atores que mais atuaram\n");
+					printf(" (7) Atores que menos atuaram\n");
+					printf(" (8) Diretores que mais dirigiram\n");
+					printf(" (9) Diretores que menos dirigiram\n");
+					printf("(10) Produtores mais atuantes\n");
+					printf("(11) Produtores menos atuantes\n");
+					printf("Escolha a sub-opcao: ");
+					int sub_op;
+					scanf("%d", &sub_op);
+					if (sub_op == 6)       relatorio_podio_decadas(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", 1);
+					else if (sub_op == 7)  relatorio_podio_decadas(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", 0);
+					else if (sub_op == 8)  relatorio_podio_decadas(arq_indices, offset, arq_grafo_leitura, t, "DIRECTED", 1);
+					else if (sub_op == 9)  relatorio_podio_decadas(arq_indices, offset, arq_grafo_leitura, t, "DIRECTED", 0);
+					else if (sub_op == 10) relatorio_podio_decadas(arq_indices, offset, arq_grafo_leitura, t, "PRODUCED", 1);
+					else if (sub_op == 11) relatorio_podio_decadas(arq_indices, offset, arq_grafo_leitura, t, "PRODUCED", 0);
+					else printf("Sub-opcao invalida!\n");
+					break;
 					
 				case 13: // (m)
 					filmes_continuacoes(arq_indices, offset, t);
@@ -330,7 +368,7 @@ int main(void){
 		} else {
 			printf("Opcao invalida\n");
 		}
-		
+		printf("\n");
 		printf("(1) - Inserir atores, diretores ou filmes\n");
 		printf("(2) - Retirar atores, diretores ou filmes\n");
 		printf("(3) - Buscar nome\n");
