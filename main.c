@@ -233,12 +233,12 @@ int main(void){
 			printf(" (4) - (d) Atores que mais atuaram juntos por decada\n");
 			printf(" (5) - (e) Atores e diretores juntos por decada\n");
 			printf(" (6) - (f) Atores que mais atuaram\n");
-			printf(" (7) - (g) Atores que MENOS atuaram\n");
-			printf(" (8) - (h) Diretores que MAIS dirigiram\n");
-			printf(" (9) - (i) Diretores que MENOS dirigiram\n");
-			printf("(10) - (j) Produtores mais atuantes\n");
-			printf("(11) - (k) Produtores menos atuantes\n");
-			printf("(12) - (l) Questoes de (f) a (k) filtradas por decada\n");
+			printf(" (7) - (g) Atores que menos atuaram\n");
+			printf(" (8) - (h) Diretores que mais dirigiram\n");
+			printf(" (9) - (i) Diretores que menos dirigiram\n");
+			printf("(10) - (j) Produtores mais produziram\n");
+			printf("(11) - (k) Produtores menos produziram\n");
+			printf("(12) - (l) Questoes de (f) a (k) por decada\n");
 			printf("(13) - (m) Filmes que sao continuacoes\n");
 			printf("(14) - (n) Atores que nasceram no mesmo ano\n");
 			printf("(15) - (o) Atores que ja dirigiram\n");
@@ -249,6 +249,7 @@ int main(void){
 			printf("(20) - (t) Atores que nasceram no ano de lancamento do filme\n");
 			printf("Escolha o numero da opcao (1 a 20): ");
 			scanf("%d",&op_letra);
+			printf("\n");
 			
 			FILE *arq_grafo_leitura = fopen("bin/relacionamentos.bin", "rb");
 			if (!arq_grafo_leitura) {
@@ -260,29 +261,43 @@ int main(void){
 
 				case 6: // (f)
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", 1);
+					printf("\n");
 					break;
 				case 7: // (g)
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", 0);
+					printf("\n");
 					break;
 				case 8: // (h)
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "DIRECTED", 1);
+					printf("\n");
 					break;
 				case 9: // (i)
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "DIRECTED", 0);
+					printf("\n");
 					break;
 				case 10: // (j)
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "PRODUCED", 1);
+					printf("\n");
 					break;
 				case 11: // (k)
 					relatorio_podio(arq_indices, offset, arq_grafo_leitura, t, "PRODUCED", 0);
+					printf("\n");
 					break;
 					
 					
-				case 15: // (o) 
+				case 13: // (m)
+					filmes_continuacoes(arq_indices, offset, t);
+					break;
+				case 14: // (n)
+					atores_mesmo_ano(arq_indices, offset, t);
+					break;
+				case 15: // (o)
 					atores_mais(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", "DIRECTED");
+					printf("\n");
 					break;
 				case 16: // (p)
 					atores_mais(arq_indices, offset, arq_grafo_leitura, t, "ACTED_IN", "PRODUCED");
+					printf("\n");
 					break;
 				case 17: // (q)
 					getchar();
@@ -295,12 +310,17 @@ int main(void){
 					offset = retira_equipe_filme(arq_indices, offset, arq_grafo_leitura, t, filme_alvo);
 					break;
 				case 18: // (r)
-					filme_faz_tudo(arq_indices, offset, arq_grafo_leitura, t, 1);
+					filmes_mais(arq_indices, offset, arq_grafo_leitura, t, 1);
+					printf("\n");
 					break;
 				case 19: // (s)
-					filme_faz_tudo(arq_indices, offset, arq_grafo_leitura, t, 0);
+					filmes_mais(arq_indices, offset, arq_grafo_leitura, t, 0);
+					printf("\n");
 					break;
-					
+				case 20: // (t)
+					atores_nascidos_ano_filme(arq_indices, offset, t);
+					printf("\n");
+					break;
 					
 				default:
 					printf("Opcao invalida. Digite um numero de 1 a 20.\n");

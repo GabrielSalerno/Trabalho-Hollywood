@@ -98,18 +98,15 @@ void TG_ins_um_sentido(TG *g, int no1, int no2){
 }
 
 void brincar_com_grafo(FILE *arq_indices, int offset_raiz, char *nome_busca, int t) {
-    // 1. Busca a entidade na Árvore B+
     TARVBM *no = TARVBM_busca(arq_indices, offset_raiz, nome_busca, t);
     if (!no) {
-        printf("\n[X] Ops! '%s' nao foi encontrado na arvore.\n", nome_busca);
+        printf("%s nao foi encontrado na arvore.\n", nome_busca);
         return;
     }
 
-    // 2. Acha a posição exata da chave dentro da folha
     int i = 0;
     while (i < no->nchaves && strcmp(no->chave[i], nome_busca) != 0) i++;
 
-    // 3. Abre o arquivo da folha para ler o offset inicial do grafo
     char nome_arq_folha[50];
     sprintf(nome_arq_folha, "bin/folha_%d.bin", no->filho[0]);
     FILE *f_folha = fopen(nome_arq_folha, "rb");
@@ -122,18 +119,14 @@ void brincar_com_grafo(FILE *arq_indices, int offset_raiz, char *nome_busca, int
     fseek(f_folha, i * sizeof(dados), SEEK_SET);
     fread(&d, sizeof(dados), 1, f_folha);
     fclose(f_folha);
-    libera_no(no, t); // Já pegamos o que queríamos, libera a RAM!
+    libera_no(no, t);
 
-    // 4. Verifica se tem relacionamentos
     if (d.offset_prim_viz == -1) {
-        printf("\n>> '%s' existe, mas nao possui relacionamentos cadastrados.\n", nome_busca);
+        printf("%s existe, mas nao possui relacionamentos cadastrados.\n", nome_busca);
         return;
     }
 
-    // 5. O Show da Navegação: Pulando pelo arquivo de relacionamentos
-    printf("\n====================================================\n");
-    printf(" Ficha de: %s\n", nome_busca);
-    printf("====================================================\n");
+    printf("Ficha de: %s\n", nome_busca);
 
     FILE *f_grafo = fopen("bin/relacionamentos.bin", "rb");
     if (!f_grafo) return;
@@ -141,23 +134,20 @@ void brincar_com_grafo(FILE *arq_indices, int offset_raiz, char *nome_busca, int
     long offset_atual = d.offset_prim_viz;
     Relacionamentos rel;
 
-    // Loop que percorre a lista encadeada no disco!
     while (offset_atual != -1) {
         fseek(f_grafo, offset_atual, SEEK_SET);
         fread(&rel, sizeof(Relacionamentos), 1, f_grafo);
 
         if (strlen(rel.papel) > 0) {
-            printf(" -> %s [%s] no papel de '%s'\n", rel.tipo_relacao, rel.nome_destino, rel.papel);
+            printf("%s %s no papel de %s\n", rel.tipo_relacao, rel.nome_destino, rel.papel);
         } else {
-            printf(" -> %s [%s]\n", rel.tipo_relacao, rel.nome_destino);
+            printf("%s %s\n", rel.tipo_relacao, rel.nome_destino);
         }
 
-        // Pula para a próxima struct no disco
         offset_atual = rel.offset_prox_viz; 
     }
 
     fclose(f_grafo);
-    printf("====================================================\n\n");
 }
 
 void insere_um_sentido_disco(FILE *arq_indices, FILE *arq_grafo, int offset_raiz, char *nome_o, char *nome_d, char *rel, char *papel, int t){
@@ -208,7 +198,6 @@ void insere_um_sentido_disco(FILE *arq_indices, FILE *arq_grafo, int offset_raiz
 void insere_aresta_disco(FILE *arq_indices, FILE *arq_grafo, int offset_raiz, char *origem, char *destino, char *rel, char *papel, int t){
   insere_um_sentido_disco(arq_indices, arq_grafo, offset_raiz, origem, destino, rel, papel, t);
     
-    // Ex: Matrix -> Keanu (HAS_ACTOR ou apenas repassa o ACTED_IN para simplificar)
     insere_um_sentido_disco(arq_indices, arq_grafo, offset_raiz, destino, origem, rel, papel, t);
 }
 
